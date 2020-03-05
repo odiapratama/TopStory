@@ -6,12 +6,17 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-const val API_PATH = "item/"
+const val API_PATH = ""
 
 interface StoryApi {
-    @GET("{id}.json")
+    @GET("item/{id}.json")
     fun getStory(
-        @Path("language") language: String,
+        @Path("id") id: String,
         @Query("print") since: String = "pretty"
     ): Call<Story>
+
+    @GET("topstories.json")
+    fun getTopStory(
+        @Query("print") since: String = "pretty"
+    ): Call<List<Long>>
 }

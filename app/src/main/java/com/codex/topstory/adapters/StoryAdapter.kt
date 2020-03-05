@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.codex.topstory.R
 import com.codex.topstory.models.Story
 
-class StoryAdapter(private val listStory: List<Story>) :
+class StoryAdapter(private var listStory: List<Story>) :
     RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
     inner class StoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,5 +29,12 @@ class StoryAdapter(private val listStory: List<Story>) :
         holder.tvTitle.text = story.title
         holder.tvComment.text = story.kids?.size?.toString() ?: "0"
         holder.tvScore.text = story.score?.toString() ?: "0"
+    }
+
+    fun updateData(newList: List<Story>?) {
+        newList?.let {
+            listStory = newList
+            notifyDataSetChanged()
+        }
     }
 }
