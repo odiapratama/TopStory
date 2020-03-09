@@ -2,6 +2,7 @@ package com.codex.topstory.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.codex.topstory.R
 import com.codex.topstory.adapters.StoryAdapter
 import com.codex.topstory.models.Story
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        storyAdapter = StoryAdapter(emptyList())
+        storyAdapter = StoryAdapter(emptyList(), this)
         rvStory.adapter = storyAdapter
     }
 
@@ -43,13 +44,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getStory(story: Long) {
-        storyRepository.getStory(story.toString(), object : StoryListener<Story> {
-            override fun onSuccess(response: Story?) {
-                listStory.add(response ?: Story())
-                storyAdapter.updateData(listStory)
-            }
+        runOnUiThread {
+            storyRepository.getStory(story.toString(), object : StoryListener<Story> {
+                override fun onSuccess(response: Story?) {
+                    listStory.add(response ?: Story())
+                    pbLoading.progress++
+                    if (listStory.size >= 500) pbLoading.visibility = View.GONE
+                    storyAdapter.updateData(listStory)
+                }
 
-            override fun onFailed(message: String?) {}
-        })
+                override fun onFailed(message: String?) {}
+            })
+        }
     }
 }

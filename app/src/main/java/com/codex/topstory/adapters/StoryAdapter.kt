@@ -1,5 +1,6 @@
 package com.codex.topstory.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.codex.topstory.R
 import com.codex.topstory.models.Story
 
-class StoryAdapter(private var listStory: List<Story>) :
+class StoryAdapter(private var listStory: List<Story>, private val context: Context) :
     RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
     inner class StoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -27,13 +28,19 @@ class StoryAdapter(private var listStory: List<Story>) :
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = listStory[position]
         holder.tvTitle.text = story.title
-        holder.tvComment.text = story.kids?.size?.toString() ?: "0"
-        holder.tvScore.text = story.score?.toString() ?: "0"
+        holder.tvComment.text = String.format(
+            context.getString(R.string.total_comment),
+            story.kids?.size?.toString() ?: "0"
+        )
+        holder.tvScore.text = String.format(
+            context.getString(R.string.total_score),
+            story.score?.toString() ?: "0"
+        )
     }
 
     fun updateData(newList: List<Story>?) {
         newList?.let {
-            listStory = newList
+            listStory = it
             notifyDataSetChanged()
         }
     }
