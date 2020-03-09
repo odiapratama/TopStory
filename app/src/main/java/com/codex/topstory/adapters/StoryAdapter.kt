@@ -5,14 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.codex.topstory.R
-import com.codex.topstory.models.Story
+import com.codex.topstory.models.Item
 
-class StoryAdapter(private var listStory: List<Story>, private val context: Context) :
+class StoryAdapter(
+    private var listItem: List<Item>,
+    private val context: Context,
+    private val listener: OnItemClickListener
+) :
     RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
+    interface OnItemClickListener {
+        fun onClick(item: Item)
+    }
+
     inner class StoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cvStory: CardView = itemView.findViewById(R.id.cvStory)
         val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val tvComment: TextView = itemView.findViewById(R.id.tvComment)
         val tvScore: TextView = itemView.findViewById(R.id.tvScore)
@@ -23,10 +33,10 @@ class StoryAdapter(private var listStory: List<Story>, private val context: Cont
         return StoryViewHolder(view)
     }
 
-    override fun getItemCount(): Int = listStory.size
+    override fun getItemCount(): Int = listItem.size
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
-        val story = listStory[position]
+        val story = listItem[position]
         holder.tvTitle.text = story.title
         holder.tvComment.text = String.format(
             context.getString(R.string.total_comment),
@@ -36,11 +46,14 @@ class StoryAdapter(private var listStory: List<Story>, private val context: Cont
             context.getString(R.string.total_score),
             story.score?.toString() ?: "0"
         )
+        holder.cvStory.setOnClickListener {
+            listener.onClick(story)
+        }
     }
 
-    fun updateData(newList: List<Story>?) {
+    fun updateData(newList: List<Item>?) {
         newList?.let {
-            listStory = it
+            listItem = it
             notifyDataSetChanged()
         }
     }

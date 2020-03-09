@@ -1,4 +1,5 @@
-import com.codex.topstory.models.Story
+import com.codex.topstory.models.Item
+import com.codex.topstory.models.User
 import com.codex.topstory.services.StoryApi
 import com.codex.topstory.services.StoryListener
 import com.codex.topstory.services.StoryRepository
@@ -8,17 +9,33 @@ import retrofit2.Response
 
 class StoryRepositoryImpl(private val storyApi: StoryApi) : StoryRepository {
 
-    private val _storyTrending: List<Story>? = null
-    override val listStory: List<Story>?
-        get() = _storyTrending
+    private val _itemTrending: List<Item>? = null
+    override val listItem: List<Item>?
+        get() = _itemTrending
 
-    override fun getStory(id: String, listener: StoryListener<Story>) {
-        storyApi.getStory(id).enqueue(object : Callback<Story> {
-            override fun onFailure(call: Call<Story>, t: Throwable) {
+    override fun getItem(id: String, listener: StoryListener<Item>) {
+        storyApi.getItem(id).enqueue(object : Callback<Item> {
+            override fun onFailure(call: Call<Item>, t: Throwable) {
                 listener.onFailed(t.message)
             }
 
-            override fun onResponse(call: Call<Story>, response: Response<Story>) {
+            override fun onResponse(call: Call<Item>, response: Response<Item>) {
+                if (response.isSuccessful) {
+                    listener.onSuccess(response.body())
+                } else {
+                    listener.onFailed(response.message())
+                }
+            }
+        })
+    }
+
+    override fun getUser(id: String, listener: StoryListener<User>) {
+        storyApi.getUser(id).enqueue(object : Callback<User> {
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                listener.onFailed(t.message)
+            }
+
+            override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
                     listener.onSuccess(response.body())
                 } else {

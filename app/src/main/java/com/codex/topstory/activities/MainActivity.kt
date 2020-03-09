@@ -1,11 +1,12 @@
 package com.codex.topstory.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.codex.topstory.R
 import com.codex.topstory.adapters.StoryAdapter
-import com.codex.topstory.models.Story
+import com.codex.topstory.models.Item
 import com.codex.topstory.services.StoryListener
 import com.codex.topstory.services.StoryRepository
 import kotlinx.android.synthetic.main.activity_main.*
@@ -13,20 +14,36 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val EXTRA_STORY = "extra_story"
+    }
+
     private lateinit var storyAdapter: StoryAdapter
     private val storyRepository: StoryRepository by inject()
     private var listTopStory: List<Long> = emptyList()
-    private var listStory: ArrayList<Story> = ArrayList()
+    private var listItem: ArrayList<Item> = ArrayList()
+    private lateinit var storyListener: StoryAdapter.OnItemClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initListener()
         initView()
         initData()
     }
 
+    private fun initListener() {
+        storyListener = object : StoryAdapter.OnItemClickListener {
+            override fun onClick(item: Item) {
+                val intent = Intent(this@MainActivity, DetailStoryActivity::class.java)
+                intent.putExtra(EXTRA_STORY, item)
+                startActivity(intent)
+            }
+        }
+    }
+
     private fun initView() {
-        storyAdapter = StoryAdapter(emptyList(), this)
+        storyAdapter = StoryAdapter(emptyList(), this, storyListener)
         rvStory.adapter = storyAdapter
     }
 
@@ -45,12 +62,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun getStory(story: Long) {
         runOnUiThread {
-            storyRepository.getStory(story.toString(), object : StoryListener<Story> {
-                override fun onSuccess(response: Story?) {
-                    listStory.add(response ?: Story())
+            storyRepository.getItem(story.toString(), object : StoryListener<Item> {
+                override fun onSuccess(response: Item?) {
+                    listItem.add(response ?: Item())
                     pbLoading.progress++
-                    if (listStory.size >= 500) pbLoading.visibility = View.GONE
-                    storyAdapter.updateData(listStory)
+                    if (listItem.size >= 500) pbLoading.visibility = View.GONE
+                    storyAdapter.updateData(listItem)
                 }
 
                 override fun onFailed(message: String?) {}

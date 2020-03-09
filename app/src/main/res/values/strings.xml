@@ -2,4 +2,6 @@
     <string name="app_name">Top Story</string>
     <string name="total_comment">Total Comment: %s</string>
     <string name="total_score">Total Score: %s</string>
+    <string name="description">Deskripsi :</string>
+    <string name="comment">Komentar</string>
 </resources>
