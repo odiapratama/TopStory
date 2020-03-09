@@ -25,8 +25,24 @@ class DetailStoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_story)
         item = intent.getSerializableExtra(EXTRA_STORY) as Item
+        initListener()
         initData()
         initView()
+    }
+
+    private fun initListener() {
+        ivFav.setOnClickListener {
+            if (item?.like == true) {
+                ivFav.setBackgroundResource(R.drawable.unstar)
+                item?.like = false
+                item?.id?.let { storyRepository.deleteFavorite(it) }
+            } else {
+                ivFav.setBackgroundResource(R.drawable.star)
+                item?.like = true
+                item?.let { storyRepository.addFavorite(it) }
+            }
+            item?.let { storyRepository.updateStory(it) }
+        }
     }
 
     private fun initData() {
@@ -49,6 +65,7 @@ class DetailStoryActivity : AppCompatActivity() {
         tvTitle.text = item?.title
         tvAuthor.text = item?.by
         tvDate.text = item?.time?.timeToDate()
+        if (item?.like == true) ivFav.setBackgroundResource(R.drawable.star)
     }
 
     private fun getItem(id: Long) {

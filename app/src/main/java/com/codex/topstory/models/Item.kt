@@ -13,4 +13,5 @@ class Item : Serializable {
     val type: String? = null
     val url: String? = null
     val text: String? = null
+    var like: Boolean? = false
 }

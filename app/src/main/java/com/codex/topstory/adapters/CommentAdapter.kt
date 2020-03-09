@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.codex.topstory.R
 import com.codex.topstory.models.Item
+import com.codex.topstory.utils.setTextHtml
 
 class CommentAdapter(private var listComment: List<Item>) :
     RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
@@ -26,7 +27,7 @@ class CommentAdapter(private var listComment: List<Item>) :
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val data = listComment[position]
-        holder.tvComment.text = data.text
+        holder.tvComment.setTextHtml(data.text)
     }
 
     fun updateData(newList: List<Item>?) {

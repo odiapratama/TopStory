@@ -9,9 +9,29 @@ import retrofit2.Response
 
 class StoryRepositoryImpl(private val storyApi: StoryApi) : StoryRepository {
 
-    private val _itemTrending: List<Item>? = null
-    override val listItem: List<Item>?
-        get() = _itemTrending
+    private val _listFavorite: ArrayList<Item>? = ArrayList()
+    override val listFavorite: ArrayList<Item>?
+        get() = _listFavorite
+
+    private val _listStory: ArrayList<Item>? = ArrayList()
+    override val listStory: ArrayList<Item>?
+        get() = _listStory
+
+    override fun addFavorite(story: Item?) {
+        story?.let { _listFavorite?.add(it) }
+    }
+
+    override fun deleteFavorite(id: Long?) {
+        listFavorite?.removeAll { it.id == id }
+    }
+
+    override fun addListStory(story: Item?) {
+        story?.let { _listStory?.add(it) }
+    }
+
+    override fun updateStory(story: Item?) {
+        story?.id?.let { _listStory?.find { it.id == story.id }?.like = story.like }
+    }
 
     override fun getItem(id: String, listener: StoryListener<Item>) {
         storyApi.getItem(id).enqueue(object : Callback<Item> {
