@@ -3,7 +3,7 @@ package com.codex.topstory.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.codex.topstory.R
-import com.codex.topstory.activities.MainActivity.Companion.EXTRA_STORY
+import com.codex.topstory.activities.StoryActivity.Companion.EXTRA_STORY
 import com.codex.topstory.adapters.CommentAdapter
 import com.codex.topstory.models.Item
 import com.codex.topstory.models.User

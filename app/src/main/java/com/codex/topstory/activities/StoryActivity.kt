@@ -10,10 +10,10 @@ import com.codex.topstory.adapters.StoryAdapter
 import com.codex.topstory.models.Item
 import com.codex.topstory.services.StoryListener
 import com.codex.topstory.services.StoryRepository
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_story.*
 import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity() {
+class StoryActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_STORY = "extra_story"
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_story)
         initListener()
         initView()
         initData()
@@ -43,14 +43,14 @@ class MainActivity : AppCompatActivity() {
     private fun initListener() {
         storyListener = object : StoryAdapter.OnItemClickListener {
             override fun onClick(item: Item) {
-                val intent = Intent(this@MainActivity, DetailStoryActivity::class.java)
+                val intent = Intent(this@StoryActivity, DetailStoryActivity::class.java)
                 intent.putExtra(EXTRA_STORY, item)
                 startActivity(intent)
             }
         }
         favoriteListener = object : FavoriteAdapter.OnItemClickListener {
             override fun onClick(story: Item) {
-                val intent = Intent(this@MainActivity, DetailStoryActivity::class.java)
+                val intent = Intent(this@StoryActivity, DetailStoryActivity::class.java)
                 intent.putExtra(EXTRA_STORY, story)
                 startActivity(intent)
             }
